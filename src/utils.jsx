@@ -13,7 +13,7 @@ export function transformData(data, nodeDataArray = [], linkDataArray = []) {
                 }
                 if(child.referrers?.length){
                     child.referrers.forEach(subChild => {
-                        linkDataArray.push({to: childNode.key, from: subChild.element.sys_id})
+                        linkDataArray.push({to: childNode.key, from: subChild.element.sys_id, text: subChild.relationship.typeName})
                     })
                     transformData(child.referrers.map(subChild => ({...subChild.element})), nodeDataArray, linkDataArray)
                 }
@@ -24,7 +24,7 @@ export function transformData(data, nodeDataArray = [], linkDataArray = []) {
         if(node.referrers?.length) {
             node.referrers.forEach(referrer => {
                 nodeDataArray.push({...referrer.element, key: referrer.element.sys_id})
-                linkDataArray.push({to: referrer.element.sys_id, from: node.key, curviness: 700})
+                linkDataArray.push({from: referrer.element.sys_id, to: node.key, curviness: 700, text: referrer.relationship.typeName})
 
             })
         }

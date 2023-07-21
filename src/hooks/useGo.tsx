@@ -162,14 +162,11 @@ const useGo = ({onDiagramEvent}: UseGoProps) => {
         // ring depends on modelData
         diagram.linkTemplate =
             $(go.Link,
-                { curve: go.Link.Bezier },
-                new go.Binding('relinkableFrom', 'canRelink').ofModel(),
-                new go.Binding('relinkableTo', 'canRelink').ofModel(),
-                $(go.Shape, { toArrow: 'Standard' }),
-        // Bezier curve,
-                $(go.Shape, { fromArrow: "Standard" })
-
-    );
+                $(go.Shape),                           // this is the link shape (the line)
+                $(go.Shape, { toArrow: "Standard" }),  // this is an arrowhead
+                $(go.TextBlock,                        // this is a Link label
+                    new go.Binding("text", "text"))
+            );
 
 
         return diagram;
