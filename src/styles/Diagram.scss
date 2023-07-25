@@ -1,0 +1,45 @@
+.diagram-component {
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid black;
+  position: relative;
+  z-index: 50;
+}
+
+.contextMenu {
+  display: flex;
+  grid-gap: 4px;
+  background: #d5d5d5;
+  border: 1px solid black;
+  border-radius: 8px;
+
+  &__item {
+    cursor: pointer;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background: #a6a6a6;
+    }
+
+    &__slider {
+      padding: 0 4px;
+      width: 60px !important;
+
+    }
+
+    &__select {
+      height: 24px;
+      background: white;
+      width: 120px;
+
+      legend {
+        top: 20px;
+      }
+
+    }
+  }
+
+
+}

@@ -8,19 +8,11 @@ import { DiagramWrapper } from './DiagramWrapper/DiagramWrapper';
 import { SelectionInspector } from './Inspector/SelectionInspector';
 
 //helpers
-import {transformedMock} from "./transformedMock";
 import {transformData} from "./utils";
 import {data} from "./mock";
 
 import './App.scss';
 
-
-
-/**
- * Use a linkDataArray since we'll be using a GraphLinksModel,
- * and modelData for demonstration purposes. Note, though, that
- * both are optional props in ReactDiagram.
- */
 export type DiagramData = {
   nodeDataArray: Array<go.ObjectData>;
   linkDataArray: Array<go.ObjectData>;
@@ -36,9 +28,17 @@ export default function App() {
   const [inspector, setInspector] = useState<JSX.Element>();
 
 
+
   const transformedData = transformData(data)
 
-  const [diagram, updateDiagram] = useImmer<DiagramData>({...transformedMock,...transformedData});
+  const [diagram, updateDiagram] = useImmer<DiagramData>({
+    modelData: {
+      canRelink: true
+    },
+    selectedData: null,
+    skipsDiagramUpdate: false,
+    ...transformedData});
+
 
 
    // Update map of node keys to their index in the array.
@@ -250,14 +250,6 @@ export default function App() {
             onDiagramEvent={handleDiagramEvent}
             onModelChange={handleModelChange}
         />
-        <label>
-          Allow Relinking?
-          <input
-              type='checkbox'
-              id='relink'
-              checked={diagram.modelData.canRelink}
-              onChange={handleRelinkChange} />
-        </label>
         {inspector}
       </div>
   );

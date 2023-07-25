@@ -1,3 +1,4 @@
+import {useState} from "react";
 import * as go from 'gojs';
 import { ReactDiagram } from 'gojs-react';
 
@@ -5,7 +6,11 @@ import { ReactDiagram } from 'gojs-react';
 import { DiagramData } from '../App';
 import useGo from "../hooks/useGo";
 
-import './Diagram.scss';
+//components
+import ContextMenu from "./components/ContextMenu";
+
+
+import '../styles/Diagram.scss';
 
 
 interface DiagramProps {
@@ -15,9 +20,20 @@ interface DiagramProps {
 }
 
 export function DiagramWrapper(props: DiagramProps) {
-    const {initDiagram, diagramRef} = useGo({onDiagramEvent:props.onDiagramEvent});
 
-    return (
+    const openPopover = (data: any) => {
+        setShowPopover(data)
+    }
+
+    const { initDiagram, diagramRef } = useGo({onDiagramEvent: props.onDiagramEvent, showContextMenu: openPopover});
+
+    const [ showPopover, setShowPopover] = useState<{x: number, y:number} | null>(null);
+
+    const onClosePopover = () => {
+        setShowPopover(null)
+    }
+
+    return (<>
         <ReactDiagram
             ref={diagramRef}
             divClassName='diagram-component'
@@ -28,5 +44,7 @@ export function DiagramWrapper(props: DiagramProps) {
             onModelChange={props.onModelChange}
             skipsDiagramUpdate={props.diagramData.skipsDiagramUpdate}
         />
+            <ContextMenu isOpen={!!showPopover} onClose={onClosePopover} xPosition={showPopover?.x} yPosition={showPopover?.y}/>
+        </>
     );
-};
+}
