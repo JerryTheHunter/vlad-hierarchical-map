@@ -1,29 +1,40 @@
-export function transformData(data, nodeDataArray = [], linkDataArray = []) {
-
+export function transformData(data, nodeDataArray = [], linkDataArray = [], shouldUnshift) {
+nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "bla", category: "mapGroup"})
     data.forEach(item => {
         const node = {...item, key: item.sys_id}
-        nodeDataArray.push(node)
+        if(shouldUnshift){
+            nodeDataArray.unshift({...node,  isHeader: true})
+        }else{
+            nodeDataArray.push(node)
+        }
+
         if(node.children?.length) {
-            node.isGroup = true
+            node.isGroup = true;
+            node.group = "bla"
             node.children.forEach(child => {
                 const childNode = {...child, group: node.key, key: child.sys_id}
 
                 if(child.children?.length){
                     transformData(child.children, nodeDataArray, linkDataArray)
                 }
-                if(child.referrers?.length){
+                if(child.referrers?.length) {
                     child.referrers.forEach(subChild => {
-                        linkDataArray.push({to: childNode.key, from: subChild.element.sys_id, text: subChild.relationship.typeName})
+                        linkDataArray.push({
+                            to: childNode.key,
+                            from: subChild.element.sys_id,
+                            text: subChild.relationship.typeName
+                        })
                     })
-                    transformData(child.referrers.map(subChild => ({...subChild.element})), nodeDataArray, linkDataArray)
+                    transformData(child.referrers.map(subChild => ({...subChild.element, group: "bla"})), nodeDataArray, linkDataArray, true)
                 }
-                nodeDataArray.push(childNode)
+                    nodeDataArray.push(childNode)
+
             })
         }
 
         if(node.referrers?.length) {
             node.referrers.forEach(referrer => {
-                nodeDataArray.push({...referrer.element, key: referrer.element.sys_id})
+                nodeDataArray.unshift({...referrer.element, key: referrer.element.sys_id, group: "bla", isHeader: true})
                 linkDataArray.push({from: referrer.element.sys_id, to: node.key, curviness: 700, text: referrer.relationship.typeName})
 
             })
@@ -60,6 +71,5 @@ function removeDuplicates(data){
     })
 
     return filtered;
-
-
 }
+

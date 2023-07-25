@@ -33,17 +33,15 @@ export default function App() {
   // Maps to store key -> arr index for quick lookups
   const [mapNodeKeyIdx, setMapNodeKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
   const [mapLinkKeyIdx, setMapLinkKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
+  const [inspector, setInspector] = useState<JSX.Element>();
+
 
   const transformedData = transformData(data)
 
-  // @ts-ignore
   const [diagram, updateDiagram] = useImmer<DiagramData>({...transformedMock,...transformedData});
 
-  const [inspector, setInspector] = useState<JSX.Element>();
 
-  /**
-   * Update map of node keys to their index in the array.
-   */
+   // Update map of node keys to their index in the array.
   const refreshNodeIndex = useCallback((nodeArr: Array<go.ObjectData>) => {
     const newMapNodeKeyIdx: Map<go.Key, number> = new Map<go.Key, number>();
     nodeArr.forEach((n: go.ObjectData, idx: number) => {
@@ -52,9 +50,7 @@ export default function App() {
     setMapNodeKeyIdx(newMapNodeKeyIdx);
   }, []);
 
-  /**
-   * Update map of link keys to their index in the array.
-   */
+  //Update map of link keys to their index in the array.
   const refreshLinkIndex = useCallback((linkArr: Array<go.ObjectData>) => {
     const newMapLinkKeyIdx: Map<go.Key, number> = new Map<go.Key, number>();
     linkArr.forEach((l: go.ObjectData, idx: number) => {
@@ -98,11 +94,6 @@ export default function App() {
     }
   };
 
-  /**
-   * Handle GoJS model changes, which output an object of data changes via Model.toIncrementalData.
-   * This method iterates over those changes and updates state to keep in sync with the GoJS model.
-   * @param obj a JSON-formatted string
-   */
   const handleModelChange = (obj: go.IncrementalData) => {
     const insertedNodeKeys = obj.insertedNodeKeys;
     const modifiedNodeData = obj.modifiedNodeData;
