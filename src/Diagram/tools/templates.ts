@@ -95,15 +95,6 @@ export const defaultGroupTemplate = $(
     )
 );
 
-function cmCommand(data: string) {
-
-    return (e:any, obj:any) => {
-        var node = obj.part.adornedPart;  // the Node with the context menu
-        var buttontext = obj.elt(1);  // the TextBlock
-        console.log(node.data);
-    }
-
-}
 
 export const mapGroupTemplate =  $(
     go.Group, "Vertical",

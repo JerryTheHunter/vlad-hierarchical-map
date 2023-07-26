@@ -1,7 +1,45 @@
-export function transformData(data, nodeDataArray = [], linkDataArray = [], shouldUnshift) {
-nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "bla", category: "mapGroup"})
+import * as go from "gojs";
+
+interface ReferrerObject {
+    element: {
+        name: string;
+        sys_id: string;
+        tableName: string;
+        tableLabel: string;
+        data: {};
+    };
+    relationship: {
+        typeName: string;
+        baseType: string;
+        sys_id: string;
+        isParent: boolean;
+        additionalFields: [];
+        style: null;
+        data: {};
+    };
+}
+
+interface JSONDataObject {
+    name: string;
+    sys_id: string;
+    tableName: string;
+    tableLabel: string;
+    referrers: ReferrerObject[];
+    children: JSONDataObject[];
+    descendantsCount: number;
+    data: {};
+    renderThisBranch: boolean;
+}
+
+export function transformData(
+    data: JSONDataObject[] | go.ObjectData[],
+    nodeDataArray:go.ObjectData[] = [],
+    linkDataArray:go.ObjectData[] = [],
+    shouldUnshift?:boolean
+): { nodeDataArray: go.ObjectData[], linkDataArray: go.ObjectData[]} {
+nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "main", category: "mapGroup"})
     data.forEach(item => {
-        const node = {...item, key: item.sys_id}
+        const node:go.ObjectData = {...item, key: item.sys_id}
         if(shouldUnshift){
             nodeDataArray.unshift({...node,  isHeader: true})
         }else{
@@ -10,8 +48,8 @@ nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "bla", category: 
 
         if(node.children?.length) {
             node.isGroup = true;
-            node.group = "bla"
-            node.children.forEach(child => {
+            node.group = "main"
+            node.children.forEach((child:JSONDataObject) => {
                 const childNode = {...child, group: node.key, key: child.sys_id}
 
                 if(child.children?.length){
@@ -25,7 +63,7 @@ nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "bla", category: 
                             text: subChild.relationship.typeName
                         })
                     })
-                    transformData(child.referrers.map(subChild => ({...subChild.element, group: "bla"})), nodeDataArray, linkDataArray, true)
+                    transformData(child.referrers.map(subChild => ({...subChild.element, group: "main"})), nodeDataArray, linkDataArray, true)
                 }
                     nodeDataArray.push(childNode)
 
@@ -33,8 +71,8 @@ nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "bla", category: 
         }
 
         if(node.referrers?.length) {
-            node.referrers.forEach(referrer => {
-                nodeDataArray.unshift({...referrer.element, key: referrer.element.sys_id, group: "bla", isHeader: true})
+            node.referrers.forEach((referrer: ReferrerObject) => {
+                nodeDataArray.unshift({...referrer.element, key: referrer.element.sys_id, group: "main", isHeader: true})
                 linkDataArray.push({from: referrer.element.sys_id, to: node.key, curviness: 700, text: referrer.relationship.typeName})
 
             })
@@ -47,7 +85,7 @@ nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "bla", category: 
     return { nodeDataArray: trimmedArray , linkDataArray };
 }
 
-function removeDuplicates(data){
+function removeDuplicates(data:Array<go.ObjectData>): go.ObjectData[]{
 
     const duplicatesArray = data.filter((item, index, self) => {
         const array = [...self]

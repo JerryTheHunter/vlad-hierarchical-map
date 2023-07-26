@@ -9,15 +9,15 @@ import {
     defaultGroupTemplate,
     mapGroupTemplate,
     nodeTemplate
-} from "../DiagramWrapper/tools/templates";
+} from "../Diagram/tools/templates";
 
 
 interface UseGoProps {
     onDiagramEvent: (e:DiagramEvent) => void;
-    showContextMenu: (data: any) => void
+    setContextMenuData: (data: any) => void
 }
 
-const useGo = ({onDiagramEvent, showContextMenu}: UseGoProps) => {
+const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
     const [diagram, setDiagram] = useState<go.Diagram | null>(null);
 
     // Cleanup
@@ -102,7 +102,7 @@ const useGo = ({onDiagramEvent, showContextMenu}: UseGoProps) => {
 
         diagram.nodeTemplateMap = templMap;
 
-        diagram.addDiagramListener("ChangedSelection", function (e) {
+        diagram.addDiagramListener("ChangedSelection", function () {
             const selectedParts = diagram.selection;
             if (selectedParts.count === 1) {
                 const part = selectedParts.first();
@@ -110,9 +110,7 @@ const useGo = ({onDiagramEvent, showContextMenu}: UseGoProps) => {
                     const viewPoint = diagram.transformDocToView(part.location);
                     const x = viewPoint.x;
                     const y = viewPoint.y - 50;
-
-
-                    showContextMenu({x, y})
+                    setContextMenuData({x, y, diagram})
                 }
             }
         });
