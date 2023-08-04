@@ -6,7 +6,7 @@ const $ = go.GraphObject.make;
 export const nodeTemplate =  $(go.Node, "Auto",
     { resizable: true, minSize: new go.Size(162, 62)},
     new go.Binding("padding", '', node => {
-        return node.isHeader? new go.Margin(5, 5, 100, 5) : 5
+        return node.isUpstream? new go.Margin(5, 5, 100, 5) : 5
     }),
     $(go.Shape, "RoundedRectangle",{ fill: "white", fromLinkable: true, toLinkable: true, }),
     $(go.Panel, "Table",
@@ -95,19 +95,8 @@ export const defaultGroupTemplate = $(
     )
 );
 
-
-export const mapGroupTemplate =  $(
-    go.Group, "Vertical",
-    {
-        // Define the group's layout
-        layout: $(go.GridLayout,
-            {
-                spacing: new go.Size(0, 0),
-                alignment: go.GridLayout.Position,
-                wrappingColumn: 3, wrappingWidth: 3000,
-                cellSize: new go.Size(20, 0) }) // Add spacing between elements
-    },
-    $(
+export const generateDefaultMapGroupTemplate = () => {
+   return $(
         go.Panel, "Auto",
         {
             // Outer rectangle
@@ -144,5 +133,93 @@ export const mapGroupTemplate =  $(
             ),
         )
     )
-);
+}
 
+
+export const generateMapGroupTemplate = () => {
+    return  $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(0, 0),
+                    alignment: go.GridLayout.Location,
+                    wrappingColumn: 1,
+                    cellSize: new go.Size(20, 0) }) // Add spacing between elements
+        },
+        generateDefaultMapGroupTemplate()
+    );
+}
+
+export const generateMapGroupTemplateVertical = (gridColumnsCount: number) => {
+       return  $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(0, 0),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: gridColumnsCount,
+                    wrappingWidth: gridColumnsCount * 180,
+                    cellSize: new go.Size(20, 0) }) // Add spacing between elements
+        },
+        generateDefaultMapGroupTemplate()
+    );
+
+}
+
+export const generateMapGroupTemplateHorizontal = (gridColumnsCount: number) => {
+    return  $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(0, 0),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: gridColumnsCount,
+                    wrappingWidth: 10000,
+                    cellSize: new go.Size(20, 0) }) // Add spacing between elements
+        },
+        generateDefaultMapGroupTemplate()
+    );
+}
+export const getUpstreamGroup = (gridColumnsCount: number) => {
+    return  $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(0, 0),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: gridColumnsCount,
+                    wrappingWidth: 10000,
+                    cellSize: new go.Size(20, 0) }) // Add spacing between elements
+        },
+        $(
+            go.Placeholder, // represents the area of all member parts,
+            { padding: 20, } // Add margin between the Placeholder and the inner rectangle
+        ),
+    );
+}
+
+export const getNodesGroup = (gridColumnsCount:number) => {
+
+    return $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(0, 0),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: gridColumnsCount,
+                    wrappingWidth: 10000,
+                    cellSize: new go.Size(20, 0)
+                }) // Add spacing between elements
+        }
+    );
+}

@@ -1,44 +1,21 @@
-
-type Relations = {
-    to:go.ObjectData | undefined,
-    from: go.ObjectData | undefined
-}
-const createRelationsArray  = (linkArray:go.ObjectData[] = [], dataArray:go.ObjectData[] = []) : Array<Relations> => {
-
-    return linkArray.reduce((acc:Array<Relations>, curr: go.ObjectData) => {
-        const objectFrom = dataArray.find(data => data.key === curr.from);
-        const objectTo = dataArray.find(data => data.key === curr.to)
-
-        return acc.concat({to: objectTo, from: objectFrom})
-
-    }, []);
-}
-
-
 export const makeUpstreamData = ({dataArray, linkArray}: {dataArray: go.ObjectData[], linkArray: go.ObjectData[]}) => {
-
-    const combinedData: Array<Relations> = createRelationsArray(linkArray, dataArray)
-
-    const updatedDataArray = dataArray.map(data => {
-        const combinedToElement = combinedData.find(combData => combData?.to?.key === data.key)
-        const combinedFromElement = combinedData.find(combData => combData?.from?.key === data.key)
-
-        if(combinedToElement && combinedToElement.from &&  data.children?.length && !combinedToElement.from.children?.length){ //condition for only 1 lvl of nesting
-            return {...data, group: combinedToElement.from.key}
+    let updatedLinkArray = [...linkArray]
+    const updatedDataArray:go.ObjectData[] = dataArray.map(data => {
+        const link: go.ObjectData | undefined = linkArray.find(link => (link.to === data.key || link.from === data.key));
+        if(link){
+            updatedLinkArray = updatedLinkArray.filter(updatedArrayLink => JSON.stringify(updatedArrayLink) === JSON.stringify(link))
+            if(link.from === data.key) {
+               return  {...data, isGroup: true, key: link.from}
+            }
+            if(link.to === data.key){
+                return {...data, group: link.from}
+            }
         }
-
-        if(combinedFromElement && combinedFromElement.to?.children?.length) {
-            return {...data, isGroup: true}
-        }
-
         return data
+
     })
 
-    //TODO: need think about logic remove relations from linkDataArray if the elements have been combined and return new link array
-
-    return { nodeDataArray: updatedDataArray, linkDataArray: linkArray }
-
-
+    return { nodeDataArray: updatedDataArray, linkDataArray: updatedLinkArray }
 }
 
 

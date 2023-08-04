@@ -26,7 +26,7 @@ export function Diagram(props: DiagramProps) {
         setPopoverData(data)
     }
 
-    const {initDiagram, diagramRef} = useGo({onDiagramEvent: onDiagramEvent, setContextMenuData: openPopover});
+    const {initDiagram, diagramRef} = useGo({onDiagramEvent: onDiagramEvent, setContextMenuData: openPopover, diagramData});
 
     const [popoverData, setPopoverData] = useState<
         { x: number, y: number, diagram: DiagramData } | null>

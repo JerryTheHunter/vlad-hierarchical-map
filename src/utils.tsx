@@ -31,6 +31,12 @@ interface JSONDataObject {
     renderThisBranch: boolean;
 }
 
+enum OrientationEnum {
+    vertical= "mapGroupVertical",
+    horizontal = "mapGroupHorizontal",
+    auto = "mapGroup",
+}
+
 export function transformData(
     data: JSONDataObject[] | go.ObjectData[],
     nodeDataArray:go.ObjectData[] = [],
@@ -41,7 +47,7 @@ nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "main", category:
     data.forEach(item => {
         const node:go.ObjectData = {...item, key: item.sys_id}
         if(shouldUnshift){
-            nodeDataArray.unshift({...node,  isHeader: true})
+            nodeDataArray.unshift({...node,  isUpstream: true})
         }else{
             nodeDataArray.push(node)
         }
@@ -72,7 +78,7 @@ nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "main", category:
 
         if(node.referrers?.length) {
             node.referrers.forEach((referrer: ReferrerObject) => {
-                nodeDataArray.unshift({...referrer.element, key: referrer.element.sys_id, group: "main", isHeader: true})
+                nodeDataArray.unshift({...referrer.element, key: referrer.element.sys_id, group: "main", isUpstream: true})
                 linkDataArray.push({from: referrer.element.sys_id, to: node.key, curviness: 700, text: referrer.relationship.typeName})
 
             })
@@ -81,8 +87,22 @@ nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "main", category:
 
     const trimmedArray = removeDuplicates(nodeDataArray);
 
+    const filterByGroup: go.ObjectData[] =trimmedArray.map(item => {
+        if(item.isUpstream && item.group === "main"){
+            return {...item, group: "upstreamGroup"}
+        }
+        if(!item.isUpstream && item.group === "main"){
+            return {...item, group: "nodesGroup"}
+        }
+        return item;
 
-    return { nodeDataArray: trimmedArray , linkDataArray };
+        })
+
+    filterByGroup.push({name: "Upstream group", isGroup: true, key: "upstreamGroup", category: "upstreamGroup", group: "main"})
+    filterByGroup.push({name: "Nodes group", isGroup: true, key: "nodesGroup", category: "nodesGroup", group: "main"})
+
+    console.log(filterByGroup)
+    return { nodeDataArray: filterByGroup , linkDataArray };
 }
 
 function removeDuplicates(data:Array<go.ObjectData>): go.ObjectData[]{
@@ -110,4 +130,12 @@ function removeDuplicates(data:Array<go.ObjectData>): go.ObjectData[]{
 
     return filtered;
 }
+
+export const changeOrientation = (nodeDataArray: go.ObjectData[], orientation:string) => {
+    return nodeDataArray.map(item => Object.values(OrientationEnum).includes(item.category)
+        ? {...item, category: OrientationEnum[orientation as keyof typeof OrientationEnum]}
+        : item)
+}
+
+
 

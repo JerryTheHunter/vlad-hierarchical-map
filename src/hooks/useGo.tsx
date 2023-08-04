@@ -3,21 +3,26 @@ import {useCallback, useEffect, useState} from "react";
 import {ReactDiagram} from "gojs-react";
 import {DiagramEvent} from "gojs"
 
+
 //helpers
 import {GuidedDraggingTool} from "../Diagram/tools/GuidedDraggingTool";
 import {
     defaultGroupTemplate,
-    mapGroupTemplate,
+    generateMapGroupTemplate,
+    generateMapGroupTemplateHorizontal,
+    generateMapGroupTemplateVertical, getNodesGroup, getUpstreamGroup,
     nodeTemplate
 } from "../Diagram/tools/templates";
+import {DiagramData} from "../Diagram/DiagramWrapper";
 
 
 interface UseGoProps {
     onDiagramEvent: (e:DiagramEvent) => void;
-    setContextMenuData: (data: any) => void
+    setContextMenuData: (data: any) => void;
+    diagramData: DiagramData
 }
 
-const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
+const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) => {
     const [diagram, setDiagram] = useState<go.Diagram | null>(null);
 
     // Cleanup
@@ -28,6 +33,7 @@ const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
             }
         };
     }, [diagram, onDiagramEvent]);
+
 
 
     const initDiagram = (): go.Diagram => {
@@ -88,10 +94,17 @@ const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
                     new go.Binding("text", "text"))
             );
 
-
         const groupTemplMap = new go.Map<string, go.Group>();
 
-        groupTemplMap.add("mapGroup", mapGroupTemplate);
+        const gridColumnsCount = diagramData.nodeDataArray.filter(item => item.isUpstream).length || 1;
+        groupTemplMap.add("mapGroup", generateMapGroupTemplate(gridColumnsCount));
+        groupTemplMap.add("mapGroupVertical", generateMapGroupTemplateVertical(gridColumnsCount));
+        groupTemplMap.add("mapGroupHorizontal", generateMapGroupTemplateHorizontal(gridColumnsCount));
+
+        groupTemplMap.add("upstreamGroup", getUpstreamGroup(gridColumnsCount));
+        groupTemplMap.add("nodesGroup", getNodesGroup(3));
+
+
         groupTemplMap.add("", defaultGroupTemplate)
 
         diagram.groupTemplateMap = groupTemplMap;

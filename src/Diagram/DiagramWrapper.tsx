@@ -20,7 +20,7 @@ export type DiagramData = {
     skipsDiagramUpdate: boolean;
 }
 
-export default function App() {
+export default function DiagramWrapper() {
     // Maps to store key -> arr index for quick lookups
     const [mapNodeKeyIdx, setMapNodeKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
     const [mapLinkKeyIdx, setMapLinkKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
@@ -225,6 +225,9 @@ export default function App() {
 
     return (
         <div>
+            <button>
+                Apply
+            </button>
             <Diagram
                 diagramData={diagram}
                 onDiagramEvent={handleDiagramEvent}

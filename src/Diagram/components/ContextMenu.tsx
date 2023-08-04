@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MuiPopover from "@mui/material/Popover";
 import {Slider} from "@mui/material";
 
@@ -58,6 +58,15 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         diagramData,
     }) => {
 
+    useEffect(() => {
+
+        if(diagramData){
+            setTimeout(() => {
+                // diagramData.model.nodeDataArray = changeOrientation(diagramData.model.nodeDataArray, "horizontal" )
+            }, 2000)
+        }
+
+    }, [diagramData])
 
     return (
         <MuiPopover
