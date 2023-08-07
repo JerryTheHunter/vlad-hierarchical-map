@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import MuiPopover from "@mui/material/Popover";
 import {Slider} from "@mui/material";
 
 import Settings from "@mui/icons-material/Settings";
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import SchemaOutlinedIcon from '@mui/icons-material/SchemaOutlined';
-import AppsOutlinedIcon from '@mui/icons-material/AppsOutlined';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
+
 //components
-import Select from "../../components/Select";
+import Select from "../components/Select";
+import Orientation from "./components/Orientation";
 
 //helpers
 import {updateDiagramWithUpstreamData} from "./utils";
+import {DiagramData} from "../Diagram/DiagramWrapper";
 
 
 type Setting = {
@@ -25,7 +27,7 @@ const BAR_SETTINGS: Setting[] = [
     {itemToRender: <Settings/>},
     {itemToRender: <AccountTreeOutlinedIcon/>},
     {itemToRender: <SchemaOutlinedIcon/>, onClick: updateDiagramWithUpstreamData},
-    {itemToRender: <AppsOutlinedIcon/>},
+    {itemToRender: <Orientation/>},
     {itemToRender: <AttachFileOutlinedIcon/>},
     {itemToRender: <DeleteOutlinedIcon/>},
     {itemToRender: <Slider className="contextMenu__item__slider"/>},
@@ -45,7 +47,7 @@ interface ContextMenuProps {
     xPosition?: number,
     yPosition?: number,
     onClose: () => void,
-    diagramData?: any;
+    diagramData?: DiagramData | null;
 }
 
 
@@ -58,15 +60,6 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         diagramData,
     }) => {
 
-    useEffect(() => {
-
-        if(diagramData){
-            setTimeout(() => {
-                // diagramData.model.nodeDataArray = changeOrientation(diagramData.model.nodeDataArray, "horizontal" )
-            }, 2000)
-        }
-
-    }, [diagramData])
 
     return (
         <MuiPopover

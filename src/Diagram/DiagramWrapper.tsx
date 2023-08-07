@@ -29,7 +29,7 @@ export default function DiagramWrapper() {
 
     const transformedData = transformData(data)
 
-    const [diagram, updateDiagram] = useImmer<DiagramData>({
+    const [diagramData, updateDiagram] = useImmer<DiagramData>({
         modelData: {
             canRelink: true
         },
@@ -177,9 +177,9 @@ export default function DiagramWrapper() {
      */
 
     useEffect(() => {
-        refreshNodeIndex(diagram.nodeDataArray);
-        refreshLinkIndex(diagram.linkDataArray);
-    }, [refreshNodeIndex, refreshLinkIndex, diagram.nodeDataArray, diagram.linkDataArray]);
+        refreshNodeIndex(diagramData.nodeDataArray);
+        refreshLinkIndex(diagramData.linkDataArray);
+    }, [refreshNodeIndex, refreshLinkIndex, diagramData.nodeDataArray, diagramData.linkDataArray]);
 
     // Handle selections
     useEffect(() => {
@@ -212,24 +212,21 @@ export default function DiagramWrapper() {
             });
         };
 
-        const selectedData = diagram.selectedData;
+        const selectedData = diagramData.selectedData;
         let inspector;
         if (selectedData !== null) {
             inspector = <SelectionInspector
-                selectedData={diagram.selectedData}
+                selectedData={diagramData.selectedData}
                 onInputChange={handleInputChange}
             />;
             setInspector(inspector);
         }
-    }, [diagram.selectedData, mapLinkKeyIdx, mapNodeKeyIdx, updateDiagram]);
+    }, [diagramData.selectedData, mapLinkKeyIdx, mapNodeKeyIdx, updateDiagram]);
 
     return (
         <div>
-            <button>
-                Apply
-            </button>
             <Diagram
-                diagramData={diagram}
+                diagramData={diagramData}
                 onDiagramEvent={handleDiagramEvent}
                 onModelChange={handleModelChange}
             />

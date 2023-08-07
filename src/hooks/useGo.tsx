@@ -9,8 +9,8 @@ import {GuidedDraggingTool} from "../Diagram/tools/GuidedDraggingTool";
 import {
     defaultGroupTemplate,
     generateMapGroupTemplate,
-    generateMapGroupTemplateHorizontal,
-    generateMapGroupTemplateVertical, getNodesGroup, getUpstreamGroup,
+    generateNodesGroupHorizontal,
+    generateNodesGroupVertical, getNodesGroup, getUpstreamGroup,
     nodeTemplate
 } from "../Diagram/tools/templates";
 import {DiagramData} from "../Diagram/DiagramWrapper";
@@ -83,26 +83,24 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
 
         // ring depends on modelData
         diagram.linkTemplate =
-            $(go.Link,
-                {
-                    curve: go.Link.Bezier, // Use Bezier curve for curvy lines
-                    adjusting: go.Link.Stretch,
-                },
-                $(go.Shape),                           // this is the link shape (the line)
-                $(go.Shape, { toArrow: "Standard" }),  // this is an arrowhead
-                $(go.TextBlock,                        // this is a Link label
+            $(go.Link, go.Link.Bezier, {curviness: -320,  relinkableFrom: false,
+                    relinkableTo: false,         selectable: true,        zOrder: 10},
+                $(go.Shape),
+                $(go.Shape, { toArrow: "Standard"}),  // this is an arrowhead
+                $(go.TextBlock, {editable: true},                        // this is a Link label
                     new go.Binding("text", "text"))
             );
 
         const groupTemplMap = new go.Map<string, go.Group>();
 
         const gridColumnsCount = diagramData.nodeDataArray.filter(item => item.isUpstream).length || 1;
-        groupTemplMap.add("mapGroup", generateMapGroupTemplate(gridColumnsCount));
-        groupTemplMap.add("mapGroupVertical", generateMapGroupTemplateVertical(gridColumnsCount));
-        groupTemplMap.add("mapGroupHorizontal", generateMapGroupTemplateHorizontal(gridColumnsCount));
+        groupTemplMap.add("mapGroup", generateMapGroupTemplate());
 
         groupTemplMap.add("upstreamGroup", getUpstreamGroup(gridColumnsCount));
+
         groupTemplMap.add("nodesGroup", getNodesGroup(3));
+        groupTemplMap.add("nodesGroupVertical", generateNodesGroupVertical());
+        groupTemplMap.add("nodesGroupHorizontal", generateNodesGroupHorizontal());
 
 
         groupTemplMap.add("", defaultGroupTemplate)
