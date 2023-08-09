@@ -17,7 +17,7 @@ import {DiagramData} from "../Diagram/DiagramWrapper";
 
 
 interface UseGoProps {
-    onDiagramEvent: (e:DiagramEvent) => void;
+    onDiagramEvent: (e: DiagramEvent) => void;
     setContextMenuData: (data: any) => void;
     diagramData: DiagramData
 }
@@ -35,12 +35,11 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
     }, [diagram, onDiagramEvent]);
 
 
-
     const initDiagram = (): go.Diagram => {
         const $ = go.GraphObject.make;
 
         // set your license key here before creating the diagram: go.Diagram.licenseKey = "...";
-        go.Shape.defineFigureGenerator("Underline", function(shape, w, h) {
+        go.Shape.defineFigureGenerator("Underline", function (shape, w, h) {
             return new go.Geometry()
                 .add(new go.PathFigure(0, h, false)
                     .add(new go.PathSegment(go.PathSegment.Line, 0, 0))
@@ -51,14 +50,19 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
             $(go.Diagram,
                 {
                     'undoManager.isEnabled': true,  // must be set to allow for model change listening
-                    'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
+                    'clickCreatingTool.archetypeNodeData': {text: 'new node', color: 'lightblue'},
                     draggingTool: new GuidedDraggingTool(),
                     'draggingTool.horizontalGuidelineColor': 'blue',
                     'draggingTool.verticalGuidelineColor': 'blue',
                     'draggingTool.centerGuidelineColor': 'green',
                     'draggingTool.guidelineWidth': 1,
                     "draggingTool.gridSnapCellSpot": go.Spot.Center,
-                    layout: $(go.GridLayout, {wrappingWidth: 3000, wrappingColumn: 3, alignment: go.GridLayout.Position, cellSize: new go.Size(50, 0)}),
+                    layout: $(go.GridLayout, {
+                        wrappingWidth: 3000,
+                        wrappingColumn: 3,
+                        alignment: go.GridLayout.Position,
+                        cellSize: new go.Size(50, 0)
+                    }),
                     model: $(go.GraphLinksModel,
                         {
                             linkKeyProperty: 'key',  // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
@@ -83,10 +87,12 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
 
         // ring depends on modelData
         diagram.linkTemplate =
-            $(go.Link, go.Link.Bezier, {curviness: -320,  relinkableFrom: false,
-                    relinkableTo: false,         selectable: true,        zOrder: 10},
+            $(go.Link, go.Link.Bezier, {
+                    curviness: -320, relinkableFrom: false,
+                    relinkableTo: false, selectable: true, zOrder: 10
+                },
                 $(go.Shape),
-                $(go.Shape, { toArrow: "Standard"}),  // this is an arrowhead
+                $(go.Shape, {toArrow: "Standard"}),  // this is an arrowhead
                 $(go.TextBlock, {editable: true},                        // this is a Link label
                     new go.Binding("text", "text"))
             );
@@ -98,7 +104,10 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
 
         groupTemplMap.add("upstreamGroup", getUpstreamGroup(gridColumnsCount));
 
+        //orientations
         groupTemplMap.add("nodesGroup", getNodesGroup(3));
+
+        groupTemplMap.add("nodesGroupDefault", getNodesGroup(3))
         groupTemplMap.add("nodesGroupVertical", generateNodesGroupVertical());
         groupTemplMap.add("nodesGroupHorizontal", generateNodesGroupHorizontal());
 
@@ -113,6 +122,7 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
 
         diagram.nodeTemplateMap = templMap;
 
+        //show context menu
         diagram.addDiagramListener("ChangedSelection", function () {
             const selectedParts = diagram.selection;
             if (selectedParts.count === 1) {
@@ -140,8 +150,7 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
     }, [diagram, onDiagramEvent]);
 
 
-
-    return { initDiagram, diagramRef, diagram }
+    return {initDiagram, diagramRef, diagram}
 }
 
 export default useGo;

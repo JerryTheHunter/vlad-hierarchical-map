@@ -31,10 +31,10 @@ interface JSONDataObject {
     renderThisBranch: boolean;
 }
 
-enum OrientationEnum {
+export enum OrientationEnum {
     vertical = "nodesGroupVertical",
     horizontal = "nodesGroupHorizontal",
-    auto = "nodesGroup",
+    auto = "nodesGroupDefault",
 }
 
 export function transformData(
@@ -149,14 +149,6 @@ function removeDuplicates(data: Array<go.ObjectData>): go.ObjectData[] {
 
     return filtered;
 }
-
-export const changeOrientation = (nodeDataArray: go.ObjectData[], orientation: string) => {
-    return nodeDataArray.map(item => item.category && item.category !== "mapGroup"
-        && item.category !== "upstreamGroup"
-            ? {...item, category: OrientationEnum[orientation as keyof typeof OrientationEnum]}
-            : item
-    )
-};
 
 
 
