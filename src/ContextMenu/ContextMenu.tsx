@@ -5,15 +5,17 @@ import {Slider} from "@mui/material";
 import Settings from "@mui/icons-material/Settings";
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import SchemaOutlinedIcon from '@mui/icons-material/SchemaOutlined';
-import AppsOutlinedIcon from '@mui/icons-material/AppsOutlined';
-import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
+
 //components
-import Select from "../../components/Select";
+import Select from "../components/Select";
+import Orientation from "./components/Orientation";
+import Export from "./components/Export";
 
 //helpers
 import {updateDiagramWithUpstreamData} from "./utils";
+import {DiagramData} from "../Diagram/DiagramWrapper";
 
 
 type Setting = {
@@ -21,32 +23,15 @@ type Setting = {
     onClick?: (arg: any) => void
 }
 
-const BAR_SETTINGS: Setting[] = [
-    {itemToRender: <Settings/>},
-    {itemToRender: <AccountTreeOutlinedIcon/>},
-    {itemToRender: <SchemaOutlinedIcon/>, onClick: updateDiagramWithUpstreamData},
-    {itemToRender: <AppsOutlinedIcon/>},
-    {itemToRender: <AttachFileOutlinedIcon/>},
-    {itemToRender: <DeleteOutlinedIcon/>},
-    {itemToRender: <Slider className="contextMenu__item__slider"/>},
-    {
-        itemToRender: (
-            <Select
-                className="contextMenu__item__select"
-                options={[{value: 1, label: "1"}, {value: 2, label: "2"}]}
-                onChange={(el) => console.log(el)}
-            />
-        )
-    }
-]
 
 interface ContextMenuProps {
     isOpen: boolean,
     xPosition?: number,
     yPosition?: number,
     onClose: () => void,
-    diagramData?: any;
+    diagramData?: DiagramData | null;
 }
+
 
 
 const ContextMenu: React.FC<ContextMenuProps> = (
@@ -57,6 +42,25 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         onClose,
         diagramData,
     }) => {
+
+    const BAR_SETTINGS: Setting[] = [
+        {itemToRender: <Settings/>},
+        {itemToRender: <AccountTreeOutlinedIcon/>},
+        {itemToRender: <SchemaOutlinedIcon/>, onClick: updateDiagramWithUpstreamData},
+        {itemToRender: <Orientation diagramData={diagramData}/>},
+        {itemToRender: <Export diagramData={diagramData}/>},
+        {itemToRender: <DeleteOutlinedIcon/>},
+        {itemToRender: <Slider className="contextMenu__item__slider"/>},
+        {
+            itemToRender: (
+                <Select
+                    className="contextMenu__item__select"
+                    options={[{value: 1, label: "1"}, {value: 2, label: "2"}]}
+                    onChange={(el) => console.log(el)}
+                />
+            )
+        }
+    ]
 
 
     return (

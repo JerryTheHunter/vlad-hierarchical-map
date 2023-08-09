@@ -3,12 +3,11 @@ import * as go from 'gojs';
 import {ReactDiagram} from 'gojs-react';
 
 //components
-import ContextMenu from "./components/ContextMenu";
+import ContextMenu from "../ContextMenu/ContextMenu";
 
 //helpers
 import useGo from "../hooks/useGo";
 import {DiagramData} from "./DiagramWrapper";
-
 
 import '../styles/Diagram.scss';
 
@@ -26,7 +25,11 @@ export function Diagram(props: DiagramProps) {
         setPopoverData(data)
     }
 
-    const {initDiagram, diagramRef} = useGo({onDiagramEvent: onDiagramEvent, setContextMenuData: openPopover});
+    const {initDiagram, diagramRef} = useGo({
+        onDiagramEvent: onDiagramEvent,
+        setContextMenuData: openPopover,
+        diagramData
+    });
 
     const [popoverData, setPopoverData] = useState<
         { x: number, y: number, diagram: DiagramData } | null>

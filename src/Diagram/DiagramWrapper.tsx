@@ -20,7 +20,7 @@ export type DiagramData = {
     skipsDiagramUpdate: boolean;
 }
 
-export default function App() {
+export default function DiagramWrapper() {
     // Maps to store key -> arr index for quick lookups
     const [mapNodeKeyIdx, setMapNodeKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
     const [mapLinkKeyIdx, setMapLinkKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
@@ -29,7 +29,7 @@ export default function App() {
 
     const transformedData = transformData(data)
 
-    const [diagram, updateDiagram] = useImmer<DiagramData>({
+    const [diagramData, updateDiagram] = useImmer<DiagramData>({
         modelData: {
             canRelink: true
         },
@@ -177,9 +177,9 @@ export default function App() {
      */
 
     useEffect(() => {
-        refreshNodeIndex(diagram.nodeDataArray);
-        refreshLinkIndex(diagram.linkDataArray);
-    }, [refreshNodeIndex, refreshLinkIndex, diagram.nodeDataArray, diagram.linkDataArray]);
+        refreshNodeIndex(diagramData.nodeDataArray);
+        refreshLinkIndex(diagramData.linkDataArray);
+    }, [refreshNodeIndex, refreshLinkIndex, diagramData.nodeDataArray, diagramData.linkDataArray]);
 
     // Handle selections
     useEffect(() => {
@@ -212,21 +212,21 @@ export default function App() {
             });
         };
 
-        const selectedData = diagram.selectedData;
+        const selectedData = diagramData.selectedData;
         let inspector;
         if (selectedData !== null) {
             inspector = <SelectionInspector
-                selectedData={diagram.selectedData}
+                selectedData={diagramData.selectedData}
                 onInputChange={handleInputChange}
             />;
             setInspector(inspector);
         }
-    }, [diagram.selectedData, mapLinkKeyIdx, mapNodeKeyIdx, updateDiagram]);
+    }, [diagramData.selectedData, mapLinkKeyIdx, mapNodeKeyIdx, updateDiagram]);
 
     return (
         <div>
             <Diagram
-                diagramData={diagram}
+                diagramData={diagramData}
                 onDiagramEvent={handleDiagramEvent}
                 onModelChange={handleModelChange}
             />

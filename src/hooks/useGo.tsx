@@ -3,21 +3,26 @@ import {useCallback, useEffect, useState} from "react";
 import {ReactDiagram} from "gojs-react";
 import {DiagramEvent} from "gojs"
 
+
 //helpers
 import {GuidedDraggingTool} from "../Diagram/tools/GuidedDraggingTool";
 import {
     defaultGroupTemplate,
-    mapGroupTemplate,
+    generateMapGroupTemplate,
+    generateNodesGroupHorizontal,
+    generateNodesGroupVertical, getNodesGroup, getUpstreamGroup,
     nodeTemplate
 } from "../Diagram/tools/templates";
+import {DiagramData} from "../Diagram/DiagramWrapper";
 
 
 interface UseGoProps {
-    onDiagramEvent: (e:DiagramEvent) => void;
-    setContextMenuData: (data: any) => void
+    onDiagramEvent: (e: DiagramEvent) => void;
+    setContextMenuData: (data: any) => void;
+    diagramData: DiagramData
 }
 
-const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
+const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) => {
     const [diagram, setDiagram] = useState<go.Diagram | null>(null);
 
     // Cleanup
@@ -34,7 +39,7 @@ const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
         const $ = go.GraphObject.make;
 
         // set your license key here before creating the diagram: go.Diagram.licenseKey = "...";
-        go.Shape.defineFigureGenerator("Underline", function(shape, w, h) {
+        go.Shape.defineFigureGenerator("Underline", function (shape, w, h) {
             return new go.Geometry()
                 .add(new go.PathFigure(0, h, false)
                     .add(new go.PathSegment(go.PathSegment.Line, 0, 0))
@@ -45,14 +50,19 @@ const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
             $(go.Diagram,
                 {
                     'undoManager.isEnabled': true,  // must be set to allow for model change listening
-                    'clickCreatingTool.archetypeNodeData': { text: 'new node', color: 'lightblue' },
+                    'clickCreatingTool.archetypeNodeData': {text: 'new node', color: 'lightblue'},
                     draggingTool: new GuidedDraggingTool(),
                     'draggingTool.horizontalGuidelineColor': 'blue',
                     'draggingTool.verticalGuidelineColor': 'blue',
                     'draggingTool.centerGuidelineColor': 'green',
                     'draggingTool.guidelineWidth': 1,
                     "draggingTool.gridSnapCellSpot": go.Spot.Center,
-                    layout: $(go.GridLayout, {wrappingWidth: 3000, wrappingColumn: 3, alignment: go.GridLayout.Position, cellSize: new go.Size(50, 0)}),
+                    layout: $(go.GridLayout, {
+                        wrappingWidth: 3000,
+                        wrappingColumn: 3,
+                        alignment: go.GridLayout.Position,
+                        cellSize: new go.Size(50, 0)
+                    }),
                     model: $(go.GraphLinksModel,
                         {
                             linkKeyProperty: 'key',  // IMPORTANT! must be defined for merges and data sync when using GraphLinksModel
@@ -77,21 +87,31 @@ const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
 
         // ring depends on modelData
         diagram.linkTemplate =
-            $(go.Link,
-                {
-                    curve: go.Link.Bezier, // Use Bezier curve for curvy lines
-                    adjusting: go.Link.Stretch,
+            $(go.Link, go.Link.Bezier, {
+                    curviness: -320, relinkableFrom: false,
+                    relinkableTo: false, selectable: true, zOrder: 10
                 },
-                $(go.Shape),                           // this is the link shape (the line)
-                $(go.Shape, { toArrow: "Standard" }),  // this is an arrowhead
-                $(go.TextBlock,                        // this is a Link label
+                $(go.Shape),
+                $(go.Shape, {toArrow: "Standard"}),  // this is an arrowhead
+                $(go.TextBlock, {editable: true},                        // this is a Link label
                     new go.Binding("text", "text"))
             );
 
-
         const groupTemplMap = new go.Map<string, go.Group>();
 
-        groupTemplMap.add("mapGroup", mapGroupTemplate);
+        const gridColumnsCount = diagramData.nodeDataArray.filter(item => item.isUpstream).length || 1;
+        groupTemplMap.add("mapGroup", generateMapGroupTemplate());
+
+        groupTemplMap.add("upstreamGroup", getUpstreamGroup(gridColumnsCount));
+
+        //orientations
+        groupTemplMap.add("nodesGroup", getNodesGroup(3));
+
+        groupTemplMap.add("nodesGroupDefault", getNodesGroup(3))
+        groupTemplMap.add("nodesGroupVertical", generateNodesGroupVertical());
+        groupTemplMap.add("nodesGroupHorizontal", generateNodesGroupHorizontal());
+
+
         groupTemplMap.add("", defaultGroupTemplate)
 
         diagram.groupTemplateMap = groupTemplMap;
@@ -102,6 +122,7 @@ const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
 
         diagram.nodeTemplateMap = templMap;
 
+        //show context menu
         diagram.addDiagramListener("ChangedSelection", function () {
             const selectedParts = diagram.selection;
             if (selectedParts.count === 1) {
@@ -129,8 +150,7 @@ const useGo = ({onDiagramEvent, setContextMenuData}: UseGoProps) => {
     }, [diagram, onDiagramEvent]);
 
 
-
-    return { initDiagram, diagramRef, diagram }
+    return {initDiagram, diagramRef, diagram}
 }
 
 export default useGo;

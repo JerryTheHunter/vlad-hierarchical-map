@@ -3,12 +3,9 @@ import * as go from "gojs";
 
 const $ = go.GraphObject.make;
 
-export const nodeTemplate =  $(go.Node, "Auto",
-    { resizable: true, minSize: new go.Size(162, 62)},
-    new go.Binding("padding", '', node => {
-        return node.isHeader? new go.Margin(5, 5, 100, 5) : 5
-    }),
-    $(go.Shape, "RoundedRectangle",{ fill: "white", fromLinkable: true, toLinkable: true, }),
+export const nodeTemplate = $(go.Node, "Auto",
+    {resizable: true, minSize: new go.Size(162, 62)},
+    $(go.Shape, "RoundedRectangle", {fill: "white", fromLinkable: true, toLinkable: true,}),
     $(go.Panel, "Table",
         {
             stretch: go.GraphObject.Fill,
@@ -17,20 +14,30 @@ export const nodeTemplate =  $(go.Node, "Auto",
             toLinkable: true,
         },
         $(go.RowColumnDefinition,
-            { column: 0, sizing: go.RowColumnDefinition.None, background: "white" }),
+            {column: 0, sizing: go.RowColumnDefinition.None, background: "white"}),
         $(go.RowColumnDefinition,
-            { column: 1, minimum: 100, background: "white", separatorStroke: null}),
+            {column: 1, minimum: 100, background: "white", separatorStroke: null}),
         $(go.RowColumnDefinition,
-            { row: 0, sizing: go.RowColumnDefinition.None }),
+            {row: 0, sizing: go.RowColumnDefinition.None}),
         $(go.RowColumnDefinition,
-            { row: 1, separatorStroke: null}),
+            {row: 1, separatorStroke: null}),
 
         $(go.TextBlock,
-            { row: 0, editable: true, column: 1, stretch: go.GraphObject.Horizontal, margin: new go.Margin(0, 0, 20, 0),font: '22px serif', textAlign: "center", fromLinkable: true, toLinkable:true },
+            {
+                row: 0,
+                editable: true,
+                column: 1,
+                stretch: go.GraphObject.Horizontal,
+                margin: new go.Margin(0, 0, 20, 0),
+                font: '22px serif',
+                textAlign: "center",
+                fromLinkable: true,
+                toLinkable: true
+            },
             new go.Binding("text", "tableLabel")
         ),
         $(go.TextBlock,
-            { row: 1, column: 1, stretch: go.GraphObject.Fill, margin: 2, textAlign: "center", editable: true},
+            {row: 1, column: 1, stretch: go.GraphObject.Fill, margin: 2, textAlign: "center", editable: true},
             new go.Binding("text", "name")),
     ),
 )
@@ -41,7 +48,7 @@ export const defaultGroupTemplate = $(
         // Define the group's layout
         layout: $(go.GridLayout,
             {
-                spacing: new go.Size(0, 0),
+                spacing: new go.Size(20, 20),
                 wrappingColumn: 3,
                 alignment:
                 go.GridLayout.Location,
@@ -89,35 +96,27 @@ export const defaultGroupTemplate = $(
             ),
             $(
                 go.Placeholder, // represents the area of all member parts,
-                { padding: 20, } // Add margin between the Placeholder and the inner rectangle
+                {padding: 20,} // Add margin between the Placeholder and the inner rectangle
             ),
         )
     )
 );
 
 
-export const mapGroupTemplate =  $(
-    go.Group, "Vertical",
-    {
-        // Define the group's layout
-        layout: $(go.GridLayout,
-            {
-                spacing: new go.Size(0, 0),
-                alignment: go.GridLayout.Position,
-                wrappingColumn: 3, wrappingWidth: 3000,
-                cellSize: new go.Size(20, 0) }) // Add spacing between elements
-    },
-    $(
-        go.Panel, "Auto",
+export const generateMapGroupTemplate = () => {
+    return $(
+        go.Group,
         {
-            // Outer rectangle
-            margin: 0,
-            background: null, // Transparent fill
-            cursor: "pointer",
-            fromSpot: go.Spot.AllSides,
-            toSpot: go.Spot.AllSides,
-
+            // Define the group's layout
+            layout: $(go.TreeLayout,
+                {
+                    angle: 90,
+                    layerSpacing: 100,
+                    nodeSpacing: 100,
+                },
+            )
         },
+
         $(
             go.Panel, "Vertical",
             $(
@@ -140,9 +139,101 @@ export const mapGroupTemplate =  $(
             ),
             $(
                 go.Placeholder, // represents the area of all member parts,
-                { padding: 20, } // Add margin between the Placeholder and the inner rectangle
+                {padding: 20, alignment: go.Spot.Center} // Add margin between the Placeholder and the inner rectangle
             ),
         )
-    )
-);
+    );
+}
 
+export const getNodesGroup = (gridColumnsCount: number) => {
+
+    return $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(20, 20),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: gridColumnsCount,
+                    wrappingWidth: 10000,
+                    cellSize: new go.Size(20, 20),
+                }) // Add spacing between elements
+        },
+        $(
+            go.Placeholder, // represents the area of all member parts,
+            {padding: 20,} // Add margin between the Placeholder and the inner rectangle
+        ),
+    );
+}
+
+
+export const generateNodesGroupVertical = () => {
+    return $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(20, 20),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: 1,
+                    cellSize: new go.Size(20, 0)
+                }) // Add spacing between elements
+        },
+        $(
+            go.Placeholder, // represents the area of all member parts,
+            {padding: 20,} // Add margin between the Placeholder and the inner rectangle
+        ),
+    );
+
+}
+
+export const generateNodesGroupHorizontal = () => {
+    return $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(20, 20),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: 2000,
+                    wrappingWidth: 20000,
+                    cellSize: new go.Size(20, 0)
+                }) // Add spacing between elements
+        },
+        $(
+            go.Placeholder, // represents the area of all member parts,
+            {padding: 20,} // Add margin between the Placeholder and the inner rectangle
+        ),
+    );
+}
+
+export const getUpstreamGroup = (gridColumnsCount: number) => {
+    return $(
+        go.Group,
+        {
+            // Define the group's layout
+            layout: $(go.GridLayout,
+                {
+                    spacing: new go.Size(0, 0),
+                    alignment: go.GridLayout.Position,
+                    wrappingColumn: gridColumnsCount,
+                    wrappingWidth: 10000,
+                    cellSize: new go.Size(20, 0)
+                }) // Add spacing between elements
+        },
+        $(
+            go.Panel,
+            "Auto",
+            {
+                alignment: go.Spot.Center, // Align the container to the center of the group cell
+            },
+        ),
+        $(
+            go.Placeholder, // represents the area of all member parts,
+            {padding: 20,} // Add margin between the Placeholder and the inner rectangle
+        ),
+    );
+};
