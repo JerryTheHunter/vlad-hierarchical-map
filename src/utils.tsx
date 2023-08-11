@@ -37,7 +37,7 @@ export enum OrientationEnum {
     auto = "nodesGroupDefault",
 }
 
-export function transformData(
+export function transformData1(
     data: JSONDataObject[] | go.ObjectData[],
     nodeDataArray: go.ObjectData[] = [],
     linkDataArray: go.ObjectData[] = [],
@@ -59,7 +59,7 @@ export function transformData(
                 const childNode = {...child, group: node.key, key: child.sys_id}
 
                 if (child.children?.length) {
-                    transformData(child.children, nodeDataArray, linkDataArray)
+                    transformData1(child.children, nodeDataArray, linkDataArray)
                 }
                 if (child.referrers?.length) {
                     child.referrers.forEach(subChild => {
@@ -70,7 +70,7 @@ export function transformData(
                             curviness: -10
                         })
                     })
-                    transformData(child.referrers.map(subChild => ({
+                    transformData1(child.referrers.map(subChild => ({
                         ...subChild.element,
                         group: "main"
                     })), nodeDataArray, linkDataArray, true)
@@ -126,29 +126,88 @@ export function transformData(
 
 function removeDuplicates(data: Array<go.ObjectData>): go.ObjectData[] {
 
-    const duplicatesArray = data.filter((item, index, self) => {
+    const duplicatesArray = data.map((item, index, self) => {
         const array = [...self]
-        return !!array.find((subItem, subIndex) => {
+        const duplicateItem = array.find((subItem, subIndex) => {
             if (subIndex === index) {
                 return null
             }
             return subItem.key === item.key
         })
+
+        return duplicateItem ? {...duplicateItem, sys__id: Math.random()*1000 + "blablabla"} : item;
     });
 
-    const filtered = data.filter(item => {
-        return !duplicatesArray.some(subItem => item.key === subItem.key);
+    // const filtered = data.filter(item => {
+    //     return !duplicatesArray.some(subItem => item.key === subItem.key);
+    //
+    // })
+    //
+    // duplicatesArray.forEach(item => {
+    //     if (item.isGroup) {
+    //         filtered.push(item)
+    //     }
+    // })
 
-    })
-
-    duplicatesArray.forEach(item => {
-        if (item.isGroup) {
-            filtered.push(item)
-        }
-    })
-
-    return filtered;
+    return duplicatesArray;
 }
+
+export const transformData = (
+    data: any,
+    parentObject?: go.ObjectData,
+    maxNestingLevel: number = Infinity,
+    currentNestingLevel: number = 0
+) => {
+    const initialData = [
+        { name: "Nodes group", isGroup: true, key: "nodesGroup", category: "nodesGroup", group: "main" },
+        { name: "Hierarchy map", isGroup: true, key: "main", category: "mapGroup" },
+        { name: "Upstream group", isGroup: true, key: "upstreamGroup", category: "upstreamGroup", group: "main" },
+    ];
+
+    let nodeDataArray: Array<go.ObjectData> = parentObject ? [] : [...initialData];
+    let linkDataArray: Array<go.ObjectData> = [];
+
+    data?.forEach((obj: JSONDataObject) => {
+        const updatedObject: go.ObjectData = {
+            ...obj,
+            group: parentObject?.key || "nodesGroup",
+            key: obj.sys_id,
+        };
+
+        if (currentNestingLevel < maxNestingLevel && updatedObject.children?.length) {
+            updatedObject.isGroup = true;
+            const newData = transformData(updatedObject.children, updatedObject, maxNestingLevel, currentNestingLevel + 1);
+            nodeDataArray.push(...newData.nodeDataArray);
+            linkDataArray.push(...newData.linkDataArray);
+        }
+
+        updatedObject.referrers?.forEach((referrer: ReferrerObject) => {
+            linkDataArray.push({
+                to: updatedObject.key,
+                from: referrer.element.sys_id,
+                text: referrer.relationship.typeName,
+                curviness: -10,
+            });
+
+            nodeDataArray.push({
+                ...referrer.element,
+                key: referrer.element.sys_id,
+                group: "upstreamGroup",
+                isUpstream: true,
+            });
+        });
+
+        nodeDataArray.push(updatedObject);
+    });
+
+    nodeDataArray = removeDuplicates(nodeDataArray);
+
+    return { nodeDataArray: nodeDataArray, linkDataArray: linkDataArray };
+};
+
+
+
+
 
 
 

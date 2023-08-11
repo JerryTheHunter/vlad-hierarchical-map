@@ -9,7 +9,7 @@ import {SelectionInspector} from '../Inspector/SelectionInspector';
 
 //helpers
 import {transformData} from "../utils";
-import {data} from "../mock";
+import {data1} from "../mock";
 
 
 export type DiagramData = {
@@ -26,8 +26,7 @@ export default function DiagramWrapper() {
     const [mapLinkKeyIdx, setMapLinkKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
     const [inspector, setInspector] = useState<JSX.Element>();
 
-
-    const transformedData = transformData(data)
+    const transformedData = transformData(data1, undefined, 3);
 
     const [diagramData, updateDiagram] = useImmer<DiagramData>({
         modelData: {
@@ -226,6 +225,7 @@ export default function DiagramWrapper() {
     return (
         <div>
             <Diagram
+                originalData={data1}
                 diagramData={diagramData}
                 onDiagramEvent={handleDiagramEvent}
                 onModelChange={handleModelChange}

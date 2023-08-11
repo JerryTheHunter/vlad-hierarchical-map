@@ -22,8 +22,8 @@ const Popover: FC<PopoverProps> = (props) => {
             vertical: 'top',
             horizontal: 'center',
         },
+        open,
         ...rest
-
     } = props;
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -42,7 +42,7 @@ const Popover: FC<PopoverProps> = (props) => {
             <MuiPopover
                 {...rest}
                 id={"popover"}
-                open={!!anchorEl}
+                open={open || !!anchorEl}
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={anchorOrigin}

@@ -661,7 +661,7 @@ export const data = [
         "data": {}
     }
 ];
-export const mockedSingleObject =  [{
+export const mockedSingleObject = [{
     "name": "Human Capital Management",
     "sys_id": "4908e0a0dbe15010e4cb542dd39619da",
     "tableName": "cmdb_ci_business_capability",
@@ -770,3 +770,340 @@ export const mockedSingleObject =  [{
     "descendantsCount": 9,
     "data": {}
 }];
+
+export const data1 = [{
+    "name": "Business Unit",
+    "sys_id": "42122f7e0fc7c3407fc1ba8ce1050e56",
+    "tableName": "x_inpgh_upmx_actor",
+    "tableLabel": "Actor",
+    "referrers": [],
+    "children": [{
+        "name": "Business Unit Head",
+        "sys_id": "a9222f7e0fc7c3407fc1ba8ce1050ede",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [],
+        "descendantsCount": 0,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Business Unit Application Architect",
+        "sys_id": "de5263be0fc7c3407fc1ba8ce1050ed2",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [{
+            "name": "UPM·X",
+            "sys_id": "f6eb4d460f16a2007fc1ba8ce1050e29",
+            "tableName": "x_inpgh_upmx_business_product",
+            "tableLabel": "Business Product",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }, {
+            "name": "Designer",
+            "sys_id": "f3d3c97f0f9747007fc1ba8ce1050e30",
+            "tableName": "x_inpgh_upmx_business_product",
+            "tableLabel": "Business Product",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }],
+        "descendantsCount": 2,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Business Unit Service Owner",
+        "sys_id": "f4322f7e0fc7c3407fc1ba8ce1050ee4",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [],
+        "descendantsCount": 0,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Sage",
+        "sys_id": "243f75fcdb6d50101084533fd39619da",
+        "tableName": "cmdb_ci_business_app",
+        "tableLabel": "Business Application",
+        "referrers": [],
+        "children": [],
+        "data": {},
+        "renderThisBranch": true
+    }],
+    "descendantsCount": 6,
+    "data": {}
+}, {
+    "name": null,
+    "sys_id": "49c277581bf0e1102a978556cc4bcb8f",
+    "tableName": "x_inpgh_upmx_actor",
+    "tableLabel": "Actor",
+    "referrers": [],
+    "children": [{
+        "name": "test",
+        "sys_id": "7a40bd551bb25110b71998efbd4bcba0",
+        "tableName": "cmdb_ci_business_app",
+        "tableLabel": "Business Application",
+        "referrers": [],
+        "children": [],
+        "data": {},
+        "renderThisBranch": true
+    }],
+    "descendantsCount": 1,
+    "data": {}
+}, {
+    "name": "1122",
+    "sys_id": "770522081bbb6150b71998efbd4bcbda",
+    "tableName": "x_inpgh_upmx_actor",
+    "tableLabel": "Actor",
+    "referrers": [],
+    "children": [],
+    "descendantsCount": 0,
+    "data": {}
+}, {
+    "name": "Customer",
+    "sys_id": "7dc6d95e0fe683007fc1ba8ce1050e93",
+    "tableName": "x_inpgh_upmx_actor",
+    "tableLabel": "Actor",
+    "referrers": [],
+    "children": [{
+        "name": "VIP Customer",
+        "sys_id": "0a73efbe0fc7c3407fc1ba8ce1050e8e",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [],
+        "descendantsCount": 0,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Customer Silver Service Level",
+        "sys_id": "2f936fbe0fc7c3407fc1ba8ce1050eed",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [],
+        "descendantsCount": 0,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Remote Customer",
+        "sys_id": "30636bbe0fc7c3407fc1ba8ce1050ed9",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [],
+        "descendantsCount": 0,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Customer Gold Service Level",
+        "sys_id": "38a323fe0fc7c3407fc1ba8ce1050e34",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [],
+        "descendantsCount": 0,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Customer Platinum Service Level",
+        "sys_id": "8fd323fe0fc7c3407fc1ba8ce1050e8f",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [{
+            "name": "Develop and manage promotional activities",
+            "sys_id": "016d2c3d1840030094f2ff0d21a4ef2",
+            "tableName": "cmdb_ci_business_capability",
+            "tableLabel": "Business Capability",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }],
+        "descendantsCount": 1,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Customer Bronze Service Level",
+        "sys_id": "c69323fe0fc7c3407fc1ba8ce1050e89",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [{
+            "name": "Develop and manage promotional activities",
+            "sys_id": "016d2c3d18400300964f2ff0d21a4ef",
+            "tableName": "cmdb_ci_business_capability",
+            "tableLabel": "Business Capability",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }],
+        "descendantsCount": 1,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Onsite Customer",
+        "sys_id": "fa63abbe0fc7c3407fc1ba8ce1050e9b",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [{
+            "name": "Develop and manage promotional activities",
+            "sys_id": "016d2c3d18400300964f2ff0d21a4ef2",
+            "tableName": "cmdb_ci_business_capability",
+            "tableLabel": "Business Capability",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }],
+        "descendantsCount": 1,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "HR File Transfer",
+        "sys_id": "24d528ccdbb5f700811f58d6dc961976",
+        "tableName": "x_inpgh_upmx_logical_interface",
+        "tableLabel": "Logical Interface",
+        "referrers": [],
+        "children": [],
+        "data": {},
+        "renderThisBranch": true
+    }],
+    "descendantsCount": 11,
+    "data": {}
+}, {
+    "name": "CIO Office",
+    "sys_id": "93b1277e0fc7c3407fc1ba8ce1050ed1",
+    "tableName": "x_inpgh_upmx_actor",
+    "tableLabel": "Actor",
+    "referrers": [{
+        "element": {
+            "name": "BambooHR ",
+            "sys_id": "85916ce8dba15010e4cb542dd3961964",
+            "tableName": "cmdb_ci_business_app",
+            "tableLabel": "Business Application",
+            "data": {}
+        },
+        "relationship": {
+            "typeName": "Sends Data to::Receives Data from",
+            "baseType": "beb31f040f3a2a007fc1ba8ce1050e76",
+            "sys_id": "48ef62801bfb6150b71998efbd4bcb30",
+            "isParent": true,
+            "additionalFields": [],
+            "style": null,
+            "data": {}
+        }
+    }],
+    "children": [{
+        "name": "CIO",
+        "sys_id": "55c1677e0fc7c3407fc1ba8ce1050e26",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [{
+            "name": "SAP HR",
+            "sys_id": "203f75fcdb6d50101084533fd39619e6",
+            "tableName": "cmdb_ci_business_app",
+            "tableLabel": "Business Application",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }, {
+            "name": "SAP Finance",
+            "sys_id": "a03f75fcdb6d50101084533fd39619e2",
+            "tableName": "cmdb_ci_business_app",
+            "tableLabel": "Business Application",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }, {
+            "name": "UPM·X",
+            "sys_id": "f6eb4d460f16a2007fc1ba8ce100e29",
+            "tableName": "x_inpgh_upmx_business_product",
+            "tableLabel": "Business Product",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }, {
+            "name": "Designer",
+            "sys_id": "f3d3c97f0f9747007fc1ba8ce1050e",
+            "tableName": "x_inpgh_upmx_business_product",
+            "tableLabel": "Business Product",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }],
+        "descendantsCount": 4,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Enterprise Architects",
+        "sys_id": "68d1ab7e0fc7c3407fc1ba8ce1050ee9",
+        "tableName": "x_inpgh_upmx_actor",
+        "tableLabel": "Actor",
+        "referrers": [],
+        "children": [{
+            "name": "Designer",
+            "sys_id": "f3d3c97f0f9747007fc1ba8ce1050e3as",
+            "tableName": "x_inpgh_upmx_business_product",
+            "tableLabel": "Business Product",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }, {
+            "name": "UPM·X",
+            "sys_id": "f6eb4d46016a2007fc1ba8ce1050e29",
+            "tableName": "x_inpgh_upmx_business_product",
+            "tableLabel": "Business Product",
+            "referrers": [],
+            "children": [],
+            "data": {},
+            "renderThisBranch": true
+        }],
+        "descendantsCount": 2,
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "AssetMAN",
+        "sys_id": "9eafd0a8dba15010e4cb542dd396194",
+        "tableName": "cmdb_ci_business_app",
+        "tableLabel": "Business Application",
+        "referrers": [],
+        "children": [],
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "AssetMAN",
+        "sys_id": "9eafd0a8dba15010e4cb542dd3961994",
+        "tableName": "cmdb_ci_business_app",
+        "tableLabel": "Business Application",
+        "referrers": [],
+        "children": [],
+        "data": {},
+        "renderThisBranch": true
+    }, {
+        "name": "Assets Management",
+        "sys_id": "8108e0a0dbe15010e4cb542dd39619bf",
+        "tableName": "cmdb_ci_business_capability",
+        "tableLabel": "Business Capability",
+        "referrers": [],
+        "children": [],
+        "data": {},
+        "renderThisBranch": true
+    }],
+    "descendantsCount": 11,
+    "data": {}
+}]
