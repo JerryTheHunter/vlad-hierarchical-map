@@ -3,6 +3,16 @@ import * as go from "gojs";
 
 const $ = go.GraphObject.make;
 
+const gridComparer =  (pa:go.ObjectData, pb:go.ObjectData) => {
+
+    var da = Number(Boolean(pa.data.isGroup));
+    var db = Number(Boolean(pb.data.isGroup));
+
+    if (da > db || pa.data.children.length >pb.data.children.length ) return -1;
+    if (da < db || pa.data.children.length < pb.data.children.length ) return 1;
+    return 0;
+}
+
 export const nodeTemplate = $(go.Node, "Auto",
     {resizable: true, minSize: new go.Size(162, 62)},
     $(go.Shape, "RoundedRectangle", {fill: "white", fromLinkable: true, toLinkable: true,}),
@@ -50,9 +60,20 @@ export const defaultGroupTemplate = $(
             {
                 spacing: new go.Size(20, 20),
                 wrappingColumn: 3,
-                alignment:
-                go.GridLayout.Location,
+                wrappingWidth: 800,
+                alignment: go.GridLayout.Position,
                 cellSize: new go.Size(0, 0),
+                sorting: go.GridLayout.Ascending,
+                comparer: (pa:go.ObjectData, pb:go.ObjectData) => {
+
+                    var da = Number(Boolean(pa.data.isGroup));
+                    var db = Number(Boolean(pb.data.isGroup));
+                    if (da > db) return -1;
+                    if (da < db) return 1;
+                    return 0;
+                }
+
+
             }) // Add spacing between elements
     },
     $(
@@ -83,8 +104,11 @@ export const defaultGroupTemplate = $(
                     alignment: go.Spot.Center, // Align text in the center horizontally and vertically
                     font: "Bold 12pt Sans-Serif",
                     margin: 20, // Add top and bottom margin to the TextBlock
+                    editable: true
                 },
-                new go.Binding("text", "name")
+                new go.Binding("text", "name", (name) => {
+                    return name || "No label"
+                }),
             ),
             $(
                 go.Shape, // Underline beneath the header
@@ -158,6 +182,7 @@ export const getNodesGroup = (gridColumnsCount: number) => {
                     wrappingColumn: gridColumnsCount,
                     wrappingWidth: 10000,
                     cellSize: new go.Size(20, 20),
+                    comparer: gridComparer
                 }) // Add spacing between elements
         },
         $(
@@ -178,7 +203,8 @@ export const generateNodesGroupVertical = () => {
                     spacing: new go.Size(20, 20),
                     alignment: go.GridLayout.Position,
                     wrappingColumn: 1,
-                    cellSize: new go.Size(20, 0)
+                    cellSize: new go.Size(20, 0),
+                    comparer: gridComparer
                 }) // Add spacing between elements
         },
         $(
@@ -200,7 +226,8 @@ export const generateNodesGroupHorizontal = () => {
                     alignment: go.GridLayout.Position,
                     wrappingColumn: 2000,
                     wrappingWidth: 20000,
-                    cellSize: new go.Size(20, 0)
+                    cellSize: new go.Size(20, 0),
+                    comparer: gridComparer
                 }) // Add spacing between elements
         },
         $(

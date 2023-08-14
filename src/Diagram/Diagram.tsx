@@ -16,6 +16,7 @@ interface DiagramProps {
     diagramData: DiagramData;
     onDiagramEvent: (e: go.DiagramEvent) => void;
     onModelChange: (e: go.IncrementalData) => void;
+    originalData: Array<any>
 }
 
 export function Diagram(props: DiagramProps) {

@@ -18,21 +18,18 @@ interface OrientationProps {
 }
 
 
-
 const Orientation: FC<OrientationProps> = ({diagramData}) => {
 
     const changeOrientation = (diagram:any, type: keyof typeof OrientationEnum) => {
-
-        diagram.model.startTransaction("changeLayout");
+        diagram.startTransaction("changeLayout");
 
         const updatedGroupTemplateMap = new go.Map(diagram.groupTemplateMap);
-        // Remove the "mapGroup" template from the copied map
-        updatedGroupTemplateMap.add("nodesGroup", updatedGroupTemplateMap.get(OrientationEnum[type]) );
+        updatedGroupTemplateMap.set("nodesGroup", updatedGroupTemplateMap.get(OrientationEnum[type]));
 
         // Update the diagram's groupTemplateMap
         diagram.groupTemplateMap = updatedGroupTemplateMap;
 
-        diagram.model.commitTransaction("changeLayout");
+        diagram.commitTransaction("changeLayout");
 
     }
 
