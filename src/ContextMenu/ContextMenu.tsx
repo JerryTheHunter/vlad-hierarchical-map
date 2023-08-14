@@ -1,4 +1,4 @@
-import React, {ChangeEvent, SyntheticEvent} from "react";
+import React, {useState} from "react";
 import MuiPopover from "@mui/material/Popover";
 import {Slider} from "@mui/material";
 
@@ -44,11 +44,17 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         diagramData,
     }) => {
 
+    const maxLevelOfNesting = findMaxNestingLevel(data1);
+
+    const [currentLevel, setCurrentLevel] = useState<number>(maxLevelOfNesting)
+
     const handleSlider = (e: Event) => {
 
-        if(diagramData){
+        if (diagramData) {
             //@ts-ignore
             diagramData.model.startTransaction("changeLevels");
+            //@ts-ignore
+            setCurrentLevel(typeof e.target?.value === "number" ? e.target.value : maxLevelOfNesting)
             //@ts-ignore
             diagramData.model.nodeDataArray = transformData(data1, undefined, e.target.value).nodeDataArray
             //@ts-ignore
@@ -56,7 +62,6 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         }
     }
 
-    const maxLevelOfNesting = findMaxNestingLevel(data1)
 
     const BAR_SETTINGS: Setting[] = [
         {itemToRender: <Settings/>},
@@ -65,13 +70,21 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         {itemToRender: <Orientation diagramData={diagramData}/>},
         {itemToRender: <Export diagramData={diagramData}/>},
         {itemToRender: <DeleteOutlinedIcon/>},
-        {itemToRender: <Slider className="contextMenu__item__slider" step={1} min={0} max={maxLevelOfNesting} onChange={handleSlider}/>},
+        {
+            itemToRender: <Slider
+                className="contextMenu__item__slider"
+                step={1}
+                min={0}
+                max={maxLevelOfNesting}
+                value={currentLevel}
+                onChange={handleSlider}/>
+        },
         {
             itemToRender: (
                 <Select
                     className="contextMenu__item__select"
                     options={[{value: 1, label: "1"}, {value: 2, label: "2"}]}
-                    onChange={(el) => null}
+                    onChange={() => null}
                 />
             )
         }

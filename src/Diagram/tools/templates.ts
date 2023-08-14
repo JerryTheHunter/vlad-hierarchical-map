@@ -7,9 +7,9 @@ const gridComparer =  (pa:go.ObjectData, pb:go.ObjectData) => {
 
     var da = Number(Boolean(pa.data.isGroup));
     var db = Number(Boolean(pb.data.isGroup));
-    console.log(pa.data, pb.data)
-    if (da > db) return -1;
-    if (da < db) return 1;
+
+    if (da > db || pa.data.children.length >pb.data.children.length ) return -1;
+    if (da < db || pa.data.children.length < pb.data.children.length ) return 1;
     return 0;
 }
 
