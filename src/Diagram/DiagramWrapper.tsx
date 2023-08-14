@@ -26,7 +26,7 @@ export default function DiagramWrapper() {
     const [mapLinkKeyIdx, setMapLinkKeyIdx] = useState<Map<go.Key, number>>(new Map<go.Key, number>());
     const [inspector, setInspector] = useState<JSX.Element>();
 
-    const transformedData = transformData(data1, undefined, 3);
+    const transformedData = transformData(data1, undefined);
 
     const [diagramData, updateDiagram] = useImmer<DiagramData>({
         modelData: {

@@ -125,8 +125,7 @@ export function transformData1(
 }
 
 function removeDuplicates(data: Array<go.ObjectData>): go.ObjectData[] {
-
-    const duplicatesArray = data.map((item, index, self) => {
+    return data.map((item, index, self) => {
         const array = [...self]
         const duplicateItem = array.find((subItem, subIndex) => {
             if (subIndex === index) {
@@ -138,18 +137,6 @@ function removeDuplicates(data: Array<go.ObjectData>): go.ObjectData[] {
         return duplicateItem ? {...duplicateItem, sys__id: Math.random()*1000 + "blablabla"} : item;
     });
 
-    // const filtered = data.filter(item => {
-    //     return !duplicatesArray.some(subItem => item.key === subItem.key);
-    //
-    // })
-    //
-    // duplicatesArray.forEach(item => {
-    //     if (item.isGroup) {
-    //         filtered.push(item)
-    //     }
-    // })
-
-    return duplicatesArray;
 }
 
 export const transformData = (
@@ -204,6 +191,27 @@ export const transformData = (
 
     return { nodeDataArray: nodeDataArray, linkDataArray: linkDataArray };
 };
+
+export const findMaxNestingLevel = (data: any): number => {
+    let maxLevel = 0;
+
+    const findMaxLevelRecursive = (data: any, currentLevel: number) => {
+        if (data && Array.isArray(data) && data.length > 0) {
+            maxLevel = Math.max(maxLevel, currentLevel);
+
+            data.forEach((obj: JSONDataObject) => {
+                if (obj.children && Array.isArray(obj.children)) {
+                    findMaxLevelRecursive(obj.children, currentLevel + 1);
+                }
+            });
+        }
+    };
+
+    findMaxLevelRecursive(data, 0);
+
+    return maxLevel;
+};
+
 
 
 

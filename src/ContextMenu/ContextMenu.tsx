@@ -16,7 +16,7 @@ import Export from "./components/Export";
 //helpers
 import {updateDiagramWithUpstreamData} from "./utils";
 import {DiagramData} from "../Diagram/DiagramWrapper";
-import {transformData} from "../utils";
+import {findMaxNestingLevel, transformData} from "../utils";
 import {data1} from "../mock";
 
 
@@ -33,7 +33,6 @@ interface ContextMenuProps {
     onClose: () => void,
     diagramData?: DiagramData | null;
 }
-
 
 
 const ContextMenu: React.FC<ContextMenuProps> = (
@@ -57,6 +56,8 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         }
     }
 
+    const maxLevelOfNesting = findMaxNestingLevel(data1)
+
     const BAR_SETTINGS: Setting[] = [
         {itemToRender: <Settings/>},
         {itemToRender: <AccountTreeOutlinedIcon/>},
@@ -64,7 +65,7 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         {itemToRender: <Orientation diagramData={diagramData}/>},
         {itemToRender: <Export diagramData={diagramData}/>},
         {itemToRender: <DeleteOutlinedIcon/>},
-        {itemToRender: <Slider className="contextMenu__item__slider" step={1} min={0} max={2} onChange={handleSlider}/>},
+        {itemToRender: <Slider className="contextMenu__item__slider" step={1} min={0} max={maxLevelOfNesting} onChange={handleSlider}/>},
         {
             itemToRender: (
                 <Select
