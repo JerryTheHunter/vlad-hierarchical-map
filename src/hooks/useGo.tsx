@@ -11,7 +11,9 @@ import {
     generateMapGroupTemplate,
     generateNodesGroupHorizontal,
     generateNodesGroupVertical, getNodesGroup, getUpstreamGroup,
-    nodeTemplate
+    nodeTemplate,
+    nodeTemplateCompact,
+    textOnlyNodeTemplate
 } from "../Diagram/tools/templates";
 import {DiagramData} from "../Diagram/DiagramWrapper";
 
@@ -116,9 +118,15 @@ const useGo = ({onDiagramEvent, setContextMenuData, diagramData}: UseGoProps) =>
 
         diagram.groupTemplateMap = groupTemplMap;
 
+
         const templMap = new go.Map<string, go.Node>();
 
         templMap.add("", nodeTemplate)
+
+        templMap.add("defaultNodeTemplate", nodeTemplate)
+        templMap.add("compactNodeTemplate", nodeTemplateCompact)
+        templMap.add("textOnlyNodeTemplate", textOnlyNodeTemplate)
+
 
         diagram.nodeTemplateMap = templMap;
 

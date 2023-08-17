@@ -37,6 +37,13 @@ export enum OrientationEnum {
     auto = "nodesGroupDefault",
 }
 
+export enum LayoutEnum {
+    compact = "compactNodeTemplate",
+    traditional = "defaultNodeTemplate",
+    text = "textOnlyNodeTemplate",
+
+}
+
 export function transformData1(
     data: JSONDataObject[] | go.ObjectData[],
     nodeDataArray: go.ObjectData[] = [],

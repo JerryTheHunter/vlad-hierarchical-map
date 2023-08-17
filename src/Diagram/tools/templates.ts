@@ -52,8 +52,112 @@ export const nodeTemplate = $(go.Node, "Auto",
     ),
 )
 
+export const nodeTemplateCompact = $(go.Node, "Auto",
+    {resizable: true, minSize: new go.Size(162, 62)},
+    $(go.Shape, "RoundedRectangle", {fill: "white", fromLinkable: true, toLinkable: true,}),
+    $(go.Panel, "Table",
+        {
+            stretch: go.GraphObject.Fill,
+            margin: 0.5,
+            fromLinkable: true,
+            toLinkable: true,
+        },
+        $(go.RowColumnDefinition,
+            {column: 0, sizing: go.RowColumnDefinition.None, background: "white"}),
+        $(go.RowColumnDefinition,
+            {column: 1, minimum: 100, background: "white", separatorStroke: null}),
+        $(go.RowColumnDefinition,
+            {row: 0, sizing: go.RowColumnDefinition.None}),
+        $(go.RowColumnDefinition,
+            {row: 1, separatorStroke: null}),
+
+        $(go.TextBlock,
+            {
+                row: 0,
+                editable: true,
+                column: 1,
+                stretch: go.GraphObject.Horizontal,
+                margin: new go.Margin(0, 0, 20, 0),
+                font: '22px serif',
+                textAlign: "center",
+                fromLinkable: true,
+                toLinkable: true
+            },
+            new go.Binding("text", "name")
+        )
+    ),
+)
+
+export const textOnlyNodeTemplate = $(go.Node, "Auto",
+    {resizable: true, minSize: new go.Size(162, 62)},
+
+    $(go.Panel, "Table",
+        {
+            stretch: go.GraphObject.Fill,
+            margin: 0.5,
+            fromLinkable: true,
+            toLinkable: true,
+        },
+        $(go.RowColumnDefinition,
+            {column: 0, sizing: go.RowColumnDefinition.None, background: "white"}),
+        $(go.RowColumnDefinition,
+            {column: 1, minimum: 100, background: "white", separatorStroke: null}),
+        $(go.RowColumnDefinition,
+            {row: 0, sizing: go.RowColumnDefinition.None}),
+        $(go.RowColumnDefinition,
+            {row: 1, separatorStroke: null}),
+
+        $(go.TextBlock,
+            {
+                row: 0,
+                editable: true,
+                column: 1,
+                stretch: go.GraphObject.Horizontal,
+                margin: new go.Margin(0, 0, 20, 0),
+                font: '22px serif',
+                textAlign: "center",
+                fromLinkable: true,
+                toLinkable: true
+            },
+            new go.Binding("text", "name")
+        )
+    ),
+)
+
+function finishDrop(e:any, grp:any) {
+
+    var ok = (grp !== null
+        ? grp.addMembers(grp.diagram.selection, true)
+        : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
+    if (!ok) e.diagram.currentTool.doCancel();
+}
+
+function highlightGroup(e:any, grp:any, show:any) {
+    if (!grp) return;
+    e.handled = true;
+    if (show) {
+        // cannot depend on the grp.diagram.selection in the case of external drag-and-drops;
+        // instead depend on the DraggingTool.draggedParts or .copiedParts
+        var tool = grp.diagram.toolManager.draggingTool;
+        var map = tool.draggedParts || tool.copiedParts;  // this is a Map
+        // now we can check to see if the Group will accept membership of the dragged Parts
+        if (grp.canAddMembers(map.toKeySet())) {
+            grp.isHighlighted = true;
+            return;
+        }
+    }
+    grp.isHighlighted = false;
+}
+
 export const defaultGroupTemplate = $(
     go.Group, "Vertical",
+    { computesBoundsAfterDrag: true,
+        computesBoundsIncludingLocation: true,
+        mouseDrop: finishDrop,
+        handlesDragDropForMembers: true,
+        mouseDragEnter: (e, grp, prev) => highlightGroup(e, grp, true),
+        mouseDragLeave: (e, grp, next) => highlightGroup(e, grp, false),
+    },
     {
         // Define the group's layout
         layout: $(go.GridLayout,
@@ -76,6 +180,7 @@ export const defaultGroupTemplate = $(
 
             }) // Add spacing between elements
     },
+    new go.Binding("background", "isHighlighted", h => h ? "rgba(194,252,214,0.2)" : "transparent").ofObject(),
     $(
         go.Panel, "Auto",
         {

@@ -12,6 +12,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Select from "../components/Select";
 import Orientation from "./components/Orientation";
 import Export from "./components/Export";
+import Layouts from "./components/Layouts";
 
 //helpers
 import {updateDiagramWithUpstreamData} from "./utils";
@@ -68,6 +69,7 @@ const ContextMenu: React.FC<ContextMenuProps> = (
         {itemToRender: <AccountTreeOutlinedIcon/>},
         {itemToRender: <SchemaOutlinedIcon/>, onClick: updateDiagramWithUpstreamData},
         {itemToRender: <Orientation diagramData={diagramData}/>},
+        {itemToRender: <Layouts diagramData={diagramData}/>},
         {itemToRender: <Export diagramData={diagramData}/>},
         {itemToRender: <DeleteOutlinedIcon/>},
         {
