@@ -1,5 +1,8 @@
 import * as go from "gojs";
 
+import suitCase from "./assets/Suitcase-work-icon-by-marco.livolsi2014-580x386.jpg"
+import human from "./assets/color-human.jpeg"
+
 interface ReferrerObject {
     element: {
         name: string;
@@ -44,93 +47,6 @@ export enum LayoutEnum {
 
 }
 
-export function transformData1(
-    data: JSONDataObject[] | go.ObjectData[],
-    nodeDataArray: go.ObjectData[] = [],
-    linkDataArray: go.ObjectData[] = [],
-    shouldUnshift?: boolean
-): { nodeDataArray: go.ObjectData[], linkDataArray: go.ObjectData[] } {
-    nodeDataArray.push({name: "Hierarchy map", isGroup: true, key: "main", category: "mapGroup"})
-    data.forEach(item => {
-        const node: go.ObjectData = {...item, key: item.sys_id}
-        if (shouldUnshift) {
-            nodeDataArray.unshift({...node, isUpstream: true})
-        } else {
-            nodeDataArray.push(node)
-        }
-
-        if (node.children?.length) {
-            node.isGroup = true;
-            node.group = "main"
-            node.children.forEach((child: JSONDataObject) => {
-                const childNode = {...child, group: node.key, key: child.sys_id}
-
-                if (child.children?.length) {
-                    transformData1(child.children, nodeDataArray, linkDataArray)
-                }
-                if (child.referrers?.length) {
-                    child.referrers.forEach(subChild => {
-                        linkDataArray.push({
-                            to: childNode.key,
-                            from: subChild.element.sys_id,
-                            text: subChild.relationship.typeName,
-                            curviness: -10
-                        })
-                    })
-                    transformData1(child.referrers.map(subChild => ({
-                        ...subChild.element,
-                        group: "main"
-                    })), nodeDataArray, linkDataArray, true)
-                }
-                nodeDataArray.push(childNode)
-
-            })
-        }
-
-        if (node.referrers?.length) {
-            node.referrers.forEach((referrer: ReferrerObject) => {
-                nodeDataArray.unshift({
-                    ...referrer.element,
-                    key: referrer.element.sys_id,
-                    group: "main",
-                    isUpstream: true
-                })
-                linkDataArray.push({
-                    from: referrer.element.sys_id,
-                    to: node.key,
-                    text: referrer.relationship.typeName,
-                    curviness: -10
-                })
-
-            })
-        }
-    })
-
-    const trimmedArray = removeDuplicates(nodeDataArray);
-
-    const filterByGroup: go.ObjectData[] = trimmedArray.map(item => {
-        if (item.isUpstream && item.group === "main") {
-            return {...item, group: "upstreamGroup"}
-        }
-        if (!item.isUpstream && item.group === "main") {
-            return {...item, group: "nodesGroup"}
-        }
-        return item;
-
-    })
-
-    filterByGroup.push({
-        name: "Upstream group",
-        isGroup: true,
-        key: "upstreamGroup",
-        category: "upstreamGroup",
-        group: "main"
-    })
-    filterByGroup.push({name: "Nodes group", isGroup: true, key: "nodesGroup", category: "nodesGroup", group: "main"})
-
-    return {nodeDataArray: filterByGroup, linkDataArray};
-}
-
 function removeDuplicates(data: Array<go.ObjectData>): go.ObjectData[] {
     return data.map((item, index, self) => {
         const array = [...self]
@@ -166,6 +82,7 @@ export const transformData = (
             ...obj,
             group: parentObject?.key || "nodesGroup",
             key: obj.sys_id,
+            image: suitCase
         };
 
         if (currentNestingLevel < maxNestingLevel && updatedObject.children?.length) {
@@ -188,6 +105,7 @@ export const transformData = (
                 key: referrer.element.sys_id,
                 group: "upstreamGroup",
                 isUpstream: true,
+                image: human
             });
         });
 

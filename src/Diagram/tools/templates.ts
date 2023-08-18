@@ -3,6 +3,18 @@ import * as go from "gojs";
 
 const $ = go.GraphObject.make;
 
+const image =  $(
+        go.Picture,
+        {
+            width: 50,
+            height: 30,
+            margin: new go.Margin(-15, 0, 0, 0 ),
+            alignment: go.Spot.Right,
+            // Add margin to the left
+        },
+        new go.Binding("source", "image") // Bind to the 'image' property in your data
+    );
+
 const gridComparer =  (pa:go.ObjectData, pb:go.ObjectData) => {
 
     var da = Number(Boolean(pa.data.isGroup));
@@ -31,7 +43,7 @@ export const nodeTemplate = $(go.Node, "Auto",
             {row: 0, sizing: go.RowColumnDefinition.None}),
         $(go.RowColumnDefinition,
             {row: 1, separatorStroke: null}),
-
+        image,
         $(go.TextBlock,
             {
                 row: 0,
@@ -49,6 +61,7 @@ export const nodeTemplate = $(go.Node, "Auto",
         $(go.TextBlock,
             {row: 1, column: 1, stretch: go.GraphObject.Fill, margin: 2, textAlign: "center", editable: true},
             new go.Binding("text", "name")),
+
     ),
 )
 
@@ -151,7 +164,8 @@ function highlightGroup(e:any, grp:any, show:any) {
 
 export const defaultGroupTemplate = $(
     go.Group, "Vertical",
-    { computesBoundsAfterDrag: true,
+    {
+        computesBoundsAfterDrag: true,
         computesBoundsIncludingLocation: true,
         mouseDrop: finishDrop,
         handlesDragDropForMembers: true,
@@ -162,12 +176,13 @@ export const defaultGroupTemplate = $(
         // Define the group's layout
         layout: $(go.GridLayout,
             {
-                spacing: new go.Size(20, 20),
+                spacing: new go.Size(0, 10),
                 wrappingColumn: 3,
                 wrappingWidth: 800,
                 alignment: go.GridLayout.Position,
-                cellSize: new go.Size(0, 0),
+                cellSize: new go.Size(50, 20),
                 sorting: go.GridLayout.Ascending,
+
                 comparer: (pa:go.ObjectData, pb:go.ObjectData) => {
 
                     var da = Number(Boolean(pa.data.isGroup));
@@ -176,8 +191,6 @@ export const defaultGroupTemplate = $(
                     if (da < db) return 1;
                     return 0;
                 }
-
-
             }) // Add spacing between elements
     },
     new go.Binding("background", "isHighlighted", h => h ? "rgba(194,252,214,0.2)" : "transparent").ofObject(),
@@ -191,6 +204,7 @@ export const defaultGroupTemplate = $(
             fromSpot: go.Spot.AllSides,
             toSpot: go.Spot.AllSides,
         },
+
         $(
             go.Shape,
             "RoundedRectangle",
@@ -198,20 +212,33 @@ export const defaultGroupTemplate = $(
                 // Inner rectangle
                 fill: null, // Transparent fill
                 stroke: "black", // Black border
-                parameter1: 14,     // Add margins to the inner rectangle
+                parameter1: 14,  // Add margins to the inner rectangle
             }
         ),
         $(
             go.Panel, "Vertical",
             $(
+                "SubGraphExpanderButton",
+                {
+                    alignment: go.Spot.Left,
+                    margin: new go.Margin(15, 300, -28, 10),
+                    width: 24,
+                    height: 24,
+                },
+            ),
+            $(
                 go.TextBlock, // Header
                 {
                     alignment: go.Spot.Center, // Align text in the center horizontally and vertically
                     font: "Bold 12pt Sans-Serif",
-                    margin: 20, // Add top and bottom margin to the TextBlock
-                    editable: true
+                    margin: 10, // Add top and bottom margin to the TextBlock
+                    editable: true,
+                    maxSize: new go.Size(200, NaN),
+                    minSize: new go.Size(200, NaN),
+                    wrap: go.TextBlock.WrapFit,
                 },
-                new go.Binding("text", "name", (name) => {
+                new go.Binding("text", "name", (name, targetObj) => {
+
                     return name || "No label"
                 }),
             ),
@@ -220,12 +247,13 @@ export const defaultGroupTemplate = $(
                 {
                     height: 1,
                     fill: "black", // Black underline
-                    stretch: go.GraphObject.Horizontal // Stretch the shape horizontally
+                    stretch: go.GraphObject.Horizontal, // Stretch the shape horizontally
+                    margin: new go.Margin(20, 0, 20, 0)
                 }
             ),
             $(
                 go.Placeholder, // represents the area of all member parts,
-                {padding: 20,} // Add margin between the Placeholder and the inner rectangle
+                {padding: 20} // Add margin between the Placeholder and the inner rectangle
             ),
         )
     )
